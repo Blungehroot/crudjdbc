@@ -50,6 +50,10 @@
         <maven.compiler.source>15</maven.compiler.source>
         <maven.compiler.target>15</maven.compiler.target>
         <maven.jar.plugin>3.2.0</maven.jar.plugin>
+        <jdbc.version>8.0.26</jdbc.version>
+        <junit.version>5.5.2</junit.version>
+        <mockito.version>2.0.2-beta</mockito.version>
+        <luquidbase.version>4.5.0</luquidbase.version>
     </properties>
 
     <dependencies>
@@ -64,6 +68,31 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${jdbc.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${luquidbase.version}</version>
         </dependency>
 
     </dependencies>
