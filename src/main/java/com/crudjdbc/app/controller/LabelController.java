@@ -1,12 +1,10 @@
 package com.crudjdbc.app.controller;
 
 import com.crudjdbc.app.model.Label;
-import com.crudjdbc.app.repository.gson.GsonLabelRepositoryImpl;
 
 import java.util.List;
 
 public class LabelController {
-    private final GsonLabelRepositoryImpl gsonLabelRepository;
 
     public LabelController() {
         gsonLabelRepository = new GsonLabelRepositoryImpl();
