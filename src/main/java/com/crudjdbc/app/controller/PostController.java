@@ -1,3 +1,4 @@
+/*
 package com.crudjdbc.app.controller;
 
 import com.crudjdbc.app.model.Label;
@@ -68,3 +69,4 @@ public class PostController {
         gsonPostRepository.deleteById(id);
     }
 }
+*/

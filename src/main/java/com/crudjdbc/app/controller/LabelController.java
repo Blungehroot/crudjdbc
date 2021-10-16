@@ -1,3 +1,4 @@
+/*
 package com.crudjdbc.app.controller;
 
 import com.crudjdbc.app.model.Label;
@@ -35,3 +36,4 @@ public class LabelController {
         gsonLabelRepository.deleteById(id);
     }
 }
+*/

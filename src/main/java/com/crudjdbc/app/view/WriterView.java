@@ -1,3 +1,4 @@
+/*
 package com.crudjdbc.app.view;
 
 
@@ -113,3 +114,4 @@ public class WriterView {
         }
     }
 }
+*/
