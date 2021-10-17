@@ -96,13 +96,4 @@ public class LabelRepositoryImpl implements LabelRepository {
         }
         System.out.println("Label is deleted");
     }
-
-    public static void main(String[] args) {
-        Label label = new Label();
-        label.setName("lol");
-        label.setId(2);
-        LabelRepositoryImpl labelRepository = new LabelRepositoryImpl();
-        labelRepository.update(label);
-
-    }
 }
