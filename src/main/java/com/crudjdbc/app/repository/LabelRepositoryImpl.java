@@ -53,7 +53,7 @@ public class LabelRepositoryImpl implements LabelRepository {
     }
 
     @Override
-    public void save(Label label) {
+    public Label save(Label label) {
         try {
             Connection conn = Connector.getConnection();
             PreparedStatement ps = conn.prepareStatement("insert into labels(name) values (?)");
@@ -64,11 +64,11 @@ public class LabelRepositoryImpl implements LabelRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("Label is saved");
+        return label;
     }
 
     @Override
-    public void update(Label label) {
+    public Label update(Label label) {
         try {
             Connection conn = Connector.getConnection();
             PreparedStatement ps = conn.prepareStatement("update labels set NAME=(?) where ID=(?);");
@@ -80,7 +80,7 @@ public class LabelRepositoryImpl implements LabelRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("Label is updated");
+        return label;
     }
 
     @Override
