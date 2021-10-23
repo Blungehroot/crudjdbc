@@ -1,7 +1,8 @@
-package com.crudjdbc.app.repository;
+package com.crudjdbc.app.repository.jdbc;
 
 import com.crudjdbc.app.driver.Connector;
 import com.crudjdbc.app.model.Label;
+import com.crudjdbc.app.repository.LabelRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,14 +11,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LabelRepositoryImpl implements LabelRepository {
+public class JdbcLabelRepositoryImpl implements LabelRepository {
 
     @Override
     public Label getById(Integer id) {
         Label label = new Label();
 
         try {
-            Connection conn = Connector.getConnection();
+            Connection conn = Connector.getInstance().getConnection();
             PreparedStatement ps = conn.prepareStatement("select * from labels where ID=(?);");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -36,7 +37,7 @@ public class LabelRepositoryImpl implements LabelRepository {
     public List<Label> getAll() {
         List<Label> labels = new ArrayList<>();
         try {
-            Connection conn = Connector.getConnection();
+            Connection conn = Connector.getInstance().getConnection();
             PreparedStatement ps = conn.prepareStatement("select * from labels;");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -55,7 +56,7 @@ public class LabelRepositoryImpl implements LabelRepository {
     @Override
     public Label save(Label label) {
         try {
-            Connection conn = Connector.getConnection();
+            Connection conn = Connector.getInstance().getConnection();
             PreparedStatement ps = conn.prepareStatement("insert into labels(name) values (?)");
             ps.setString(1, label.getName());
             ps.executeUpdate();
@@ -70,7 +71,7 @@ public class LabelRepositoryImpl implements LabelRepository {
     @Override
     public Label update(Label label) {
         try {
-            Connection conn = Connector.getConnection();
+            Connection conn = Connector.getInstance().getConnection();
             PreparedStatement ps = conn.prepareStatement("update labels set NAME=(?) where ID=(?);");
             ps.setString(1, label.getName());
             ps.setInt(2, label.getId());
@@ -86,7 +87,7 @@ public class LabelRepositoryImpl implements LabelRepository {
     @Override
     public void deleteById(Integer id) {
         try {
-            Connection conn = Connector.getConnection();
+            Connection conn = Connector.getInstance().getConnection();
             PreparedStatement ps = conn.prepareStatement("delete from labels where ID=(?);");
             ps.setInt(1, id);
             ps.executeUpdate();
@@ -95,5 +96,10 @@ public class LabelRepositoryImpl implements LabelRepository {
             e.printStackTrace();
         }
         System.out.println("Label is deleted");
+    }
+
+    public static void main(String[] args) {
+        JdbcLabelRepositoryImpl jb = new JdbcLabelRepositoryImpl();
+        jb.deleteById(1);
     }
 }
