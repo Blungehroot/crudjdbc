@@ -26,8 +26,10 @@ public class Connector {
         return connection;
     }
 
-    public static Connector getInstance() {
+    public static Connector getInstance() throws SQLException{
         if (instance == null) {
+            instance = new Connector();
+        } else if (instance.getConnection().isClosed()) {
             instance = new Connector();
         }
         return instance;

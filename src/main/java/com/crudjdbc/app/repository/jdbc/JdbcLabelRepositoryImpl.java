@@ -97,9 +97,4 @@ public class JdbcLabelRepositoryImpl implements LabelRepository {
         }
         System.out.println("Label is deleted");
     }
-
-    public static void main(String[] args) {
-        JdbcLabelRepositoryImpl jb = new JdbcLabelRepositoryImpl();
-        jb.deleteById(1);
-    }
 }

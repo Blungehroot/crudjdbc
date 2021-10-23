@@ -1,17 +1,13 @@
-/*
 package com.crudjdbc.app.view;
 
 
 import com.crudjdbc.app.controller.LabelController;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.Scanner;
 
 public class LabelView {
     private final LabelController labelController;
     private final Scanner sc;
-    private final Gson gson;
 
     private static final String menu = "Select action on label:\n" +
             "1. Add new label\n" +
@@ -33,7 +29,6 @@ public class LabelView {
     public LabelView(LabelController labelController, Scanner sc) {
         this.labelController = labelController;
         this.sc = sc;
-        this.gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
     void create() {
@@ -49,26 +44,26 @@ public class LabelView {
         System.out.println(INPUT_NAME_MSG);
         String name = sc.next();
         System.out.println(EDIT_MSG);
-        labelController.update(Long.valueOf(id), name);
+        labelController.update(Integer.valueOf(id), name);
     }
 
     void delete() {
         System.out.println(INPUT_ID_TO_DELETE);
         String id = sc.next();
         System.out.println(DELETE_MSG);
-        labelController.delete(Long.valueOf(id));
+        labelController.delete(Integer.valueOf(id));
     }
 
     void printSelected() {
         System.out.println(INPUT_ID_MSG);
         String id = sc.next();
         System.out.println(DISPLAY_TARGET_MSG);
-        System.out.println(gson.toJson(labelController.getById(Long.valueOf(id))));
+        System.out.println(labelController.getById(Integer.valueOf(id)));
     }
 
     void printAll() {
         System.out.println(DISPLAY_ALL_MSG);
-        System.out.println(gson.toJson(labelController.getAll()));
+        System.out.println(labelController.getAll());
     }
 
     void show() {
@@ -109,4 +104,3 @@ public class LabelView {
         }
     }
 }
-*/
