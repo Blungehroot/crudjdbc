@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class Post implements Serializable {
-    private Long id;
+    private Integer id;
     private String name;
     private String content;
     private List<Label> labels;
