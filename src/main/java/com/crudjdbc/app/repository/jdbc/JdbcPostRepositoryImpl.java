@@ -15,6 +15,23 @@ import java.util.stream.Collectors;
 
 public class JdbcPostRepositoryImpl implements PostRepository {
 
+    private int getPostId(Post post) {
+        try {
+            Connection conn = Connector.getInstance().getConnection();
+            PreparedStatement ps = conn.prepareStatement("select * from posts where NAME=(?);");
+            ps.setString(1, post.getName());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                post.setId(rs.getInt("ID"));
+                post.setName(rs.getString("NAME"));
+                post.setContent(rs.getString("CONTENT"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return post.getId();
+    }
+
     @Override
     public Post getById(Integer id) {
         Post post = new Post();
@@ -106,17 +123,35 @@ public class JdbcPostRepositoryImpl implements PostRepository {
         return post;
     }
 
-    //TODO: implement this method
     @Override
     public Post update(Post post) {
         try {
             Connection conn = Connector.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement("update posts set NAME=(?), CONTENT=(?) where ID=(?);");
+            PreparedStatement ps = conn.prepareStatement("update posts\n" +
+                    "inner join labels_posts on labels_posts.POST_ID = posts.ID\n" +
+                    "SET posts.NAME = (?), posts.CONTENT = (?)\n" +
+                    "WHERE posts.ID = (?);");
             ps.setString(1, post.getName());
             ps.setString(2, post.getContent());
             ps.setInt(3, post.getId());
             ps.executeUpdate();
+            int postId = getPostId(post);
 
+            ps = conn.prepareStatement("delete from labels_posts where POST_ID=(?);");
+            List<Label> labels = new ArrayList<>();
+            ps.setInt(1, postId);
+            ps.executeUpdate();
+
+            conn.setAutoCommit(false);
+            ps = conn.prepareStatement("insert into labels_posts  values (?, ?);");
+            labels.addAll(post.getLabels());
+            for (int i = 0; i < labels.size(); i++) {
+                ps.setInt(1, labels.get(i).getId());
+                ps.setInt(2, postId);
+                ps.addBatch();
+            }
+            ps.executeBatch();
+            conn.commit();
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -136,40 +171,5 @@ public class JdbcPostRepositoryImpl implements PostRepository {
             e.printStackTrace();
         }
         System.out.println("Post is deleted");
-    }
-
-    private int getPostId(Post post) {
-        try {
-            Connection conn = Connector.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement("select * from posts where NAME=(?);");
-            ps.setString(1, post.getName());
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                post.setId(rs.getInt("ID"));
-                post.setName(rs.getString("NAME"));
-                post.setContent(rs.getString("CONTENT"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return post.getId();
-    }
-
-    public static void main(String[] args) {
-        JdbcPostRepositoryImpl po = new JdbcPostRepositoryImpl();
-        /*JdbcLabelRepositoryImpl la = new JdbcLabelRepositoryImpl();
-        Label label = new Label();
-        Label label2 = new Label();
-        label = la.getById(2);
-        label2 = la.getById(5);
-        List<Label> labels = new ArrayList();
-        Post post = new Post();
-        labels.add(label);
-        labels.add(label2);
-        post.setName("keker");
-        post.setContent("kpkdlkf");
-        post.setLabels(labels);
-        po.save(post);*/
-        System.out.println(po.getAll());
     }
 }
