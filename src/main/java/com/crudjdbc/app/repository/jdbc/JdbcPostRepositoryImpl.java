@@ -17,16 +17,27 @@ public class JdbcPostRepositoryImpl implements PostRepository {
     @Override
     public Post getById(Integer id) {
         Post post = new Post();
-
+        List<Label> labels = new ArrayList<>();
         try {
             Connection conn = Connector.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement("select * from posts where ID=(?);");
+            PreparedStatement ps =
+                    conn.prepareStatement("select p.ID, p.NAME, p.CONTENT, l.ID, l.NAME from posts p\n" +
+                    "LEFT OUTER JOIN labels_posts lp on p.ID = lp.POST_ID\n" +
+                    "LEFT OUTER JOIN labels l on lp.LABEL_ID = l.ID\n" +
+                    "where p.ID=(?);");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                post.setId(rs.getInt("ID"));
-                post.setName(rs.getString("NAME"));
+                Label label = new Label();
+                post.setId(rs.getInt("p.ID"));
+                post.setName(rs.getString("p.NAME"));
                 post.setContent(rs.getString("CONTENT"));
+                if (rs.getInt("l.ID") > 0) {
+                    label.setId(rs.getInt("l.ID"));
+                    label.setName(rs.getString("l.NAME"));
+                    labels.add(label);
+                    post.setLabels(labels);
+                }
             }
             conn.close();
         } catch (SQLException e) {
@@ -132,17 +143,21 @@ public class JdbcPostRepositoryImpl implements PostRepository {
     }
 
     public static void main(String[] args) {
-        JdbcLabelRepositoryImpl la = new JdbcLabelRepositoryImpl();
-        Label label = la.getById(1);
-        Label label1 = la.getById(5);
-        List<Label> labels = new ArrayList<>();
-        labels.add(label);
-        labels.add(label1);
-        Post post = new Post();
-        post.setName("kek2");
-        post.setContent("content");
-        post.setLabels(labels);
         JdbcPostRepositoryImpl po = new JdbcPostRepositoryImpl();
+        JdbcLabelRepositoryImpl la = new JdbcLabelRepositoryImpl();
+        Label label = new Label();
+        Label label2 = new Label();
+        label = la.getById(2);
+        label2 = la.getById(5);
+        List<Label> labels = new ArrayList();
+        Post post = new Post();
+        labels.add(label);
+        labels.add(label2);
+        post.setName("keker");
+        post.setContent("kpkdlkf");
+        post.setLabels(labels);
         po.save(post);
+        po.getById(3);
+        System.out.println(po.getById(3));
     }
 }
