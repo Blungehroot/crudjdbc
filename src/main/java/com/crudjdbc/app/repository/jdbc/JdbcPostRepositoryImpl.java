@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class JdbcPostRepositoryImpl implements PostRepository {
 
@@ -22,9 +23,9 @@ public class JdbcPostRepositoryImpl implements PostRepository {
             Connection conn = Connector.getInstance().getConnection();
             PreparedStatement ps =
                     conn.prepareStatement("select p.ID, p.NAME, p.CONTENT, l.ID, l.NAME from posts p\n" +
-                    "LEFT OUTER JOIN labels_posts lp on p.ID = lp.POST_ID\n" +
-                    "LEFT OUTER JOIN labels l on lp.LABEL_ID = l.ID\n" +
-                    "where p.ID=(?);");
+                            "LEFT OUTER JOIN labels_posts lp on p.ID = lp.POST_ID\n" +
+                            "LEFT OUTER JOIN labels l on lp.LABEL_ID = l.ID\n" +
+                            "where p.ID=(?);");
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -49,22 +50,33 @@ public class JdbcPostRepositoryImpl implements PostRepository {
     @Override
     public List<Post> getAll() {
         List<Post> posts = new ArrayList<>();
+        List<Label> labels = new ArrayList<>();
         try {
             Connection conn = Connector.getInstance().getConnection();
-            PreparedStatement ps = conn.prepareStatement("select * from posts;");
+            PreparedStatement ps = conn.prepareStatement("select p.ID, p.NAME, p.CONTENT, l.ID, l.NAME from posts p\n" +
+                    "LEFT OUTER JOIN labels_posts lp on p.ID = lp.POST_ID\n" +
+                    "LEFT OUTER JOIN labels l on lp.LABEL_ID = l.ID");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Post post = new Post();
-                post.setId(rs.getInt("ID"));
-                post.setName(rs.getString("NAME"));
+                Label label = new Label();
+                post.setId(rs.getInt("p.ID"));
+                post.setName(rs.getString("p.NAME"));
                 post.setContent(rs.getString("CONTENT"));
+                if (rs.getInt("l.ID") > 0) {
+                    label.setId(rs.getInt("l.ID"));
+                    label.setName(rs.getString("l.NAME"));
+                    labels.add(label);
+                    post.setLabels(labels);
+                }
                 posts.add(post);
+                labels = new ArrayList<>();
             }
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return posts;
+        return posts.stream().distinct().collect(Collectors.toList());
     }
 
     @Override
@@ -94,6 +106,7 @@ public class JdbcPostRepositoryImpl implements PostRepository {
         return post;
     }
 
+    //TODO: implement this method
     @Override
     public Post update(Post post) {
         try {
@@ -144,7 +157,7 @@ public class JdbcPostRepositoryImpl implements PostRepository {
 
     public static void main(String[] args) {
         JdbcPostRepositoryImpl po = new JdbcPostRepositoryImpl();
-        JdbcLabelRepositoryImpl la = new JdbcLabelRepositoryImpl();
+        /*JdbcLabelRepositoryImpl la = new JdbcLabelRepositoryImpl();
         Label label = new Label();
         Label label2 = new Label();
         label = la.getById(2);
@@ -156,8 +169,7 @@ public class JdbcPostRepositoryImpl implements PostRepository {
         post.setName("keker");
         post.setContent("kpkdlkf");
         post.setLabels(labels);
-        po.save(post);
-        po.getById(3);
-        System.out.println(po.getById(3));
+        po.save(post);*/
+        System.out.println(po.getAll());
     }
 }
