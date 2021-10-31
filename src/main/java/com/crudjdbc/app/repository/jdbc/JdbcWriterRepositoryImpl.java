@@ -146,28 +146,49 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
 
     @Override
     public Writer update(Writer writer) {
-        return null;
+        try {
+            Connection conn = Connector.getInstance().getConnection();
+            PreparedStatement ps = conn.prepareStatement("update writers inner join posts_writers on posts_writers.WRITER_ID = writers.ID\n" +
+                    "SET writers.NAME = (?)\n" +
+                    "WHERE writers.ID = (?);");
+            ps.setString(1, writer.getName());
+            ps.setInt(2, writer.getId());
+            ps.executeUpdate();
+            int writerId = getWriterId(writer);
+
+            ps = conn.prepareStatement("delete from posts_writers where WRITER_ID=(?);");
+            List<Post> posts = new ArrayList<>();
+            ps.setInt(1, writerId);
+            ps.executeUpdate();
+
+            conn.setAutoCommit(false);
+            ps = conn.prepareStatement("insert into posts_writers  values (?, ?);");
+            posts.addAll(writer.getPosts());
+            for (int i = 0; i < posts.size(); i++) {
+                ps.setInt(1, posts.get(i).getId());
+                ps.setInt(2, writerId);
+                ps.addBatch();
+            }
+            ps.executeBatch();
+            conn.commit();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return writer;
     }
 
     @Override
-    public void deleteById(Integer integer) {
-
-    }
-
-    public static void main(String[] args) {
-        JdbcWriterRepositoryImpl wr = new JdbcWriterRepositoryImpl();
-        JdbcPostRepositoryImpl pr = new JdbcPostRepositoryImpl();
-
-        //Writer writer = new Writer();
-        //Post post = new Post();
-        //Post post1 = new Post();
-        //List<Post> posts = new ArrayList<>();
-        //post = pr.getById(20);
-        //posts.add(post);
-
-        //writer.setName("kik");
-        //writer.setPosts(posts);
-        // wr.save(writer);
-        System.out.println(wr.getAll());
+    public void deleteById(Integer id) {
+        try {
+            Connection conn = Connector.getInstance().getConnection();
+            PreparedStatement ps = conn.prepareStatement("delete from writers where ID=(?);");
+            ps.setInt(1, id);
+            ps.executeUpdate();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Writer is deleted");
     }
 }
