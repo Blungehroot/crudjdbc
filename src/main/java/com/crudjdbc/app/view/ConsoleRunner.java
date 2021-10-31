@@ -1,12 +1,13 @@
 package com.crudjdbc.app.view;
 
 import com.crudjdbc.app.controller.LabelController;
+import com.crudjdbc.app.controller.PostController;
 
 import java.util.Scanner;
 
 public class ConsoleRunner {
     private final LabelView labelView;
-    //private final PostView postView;
+    private final PostView postView;
     //private final WriterView writerView;
 
     private Scanner sc = new Scanner(System.in);
@@ -20,10 +21,10 @@ public class ConsoleRunner {
         LabelController labelController = new LabelController();
         labelView = new LabelView(labelController, sc);
 
-        /*PostController postController = new PostController();
+        PostController postController = new PostController();
         postView = new PostView(postController, sc);
 
-        WriterController writerController = new WriterController();
+        /*WriterController writerController = new WriterController();
         writerView = new WriterView(writerController, sc);*/
     }
 
@@ -38,7 +39,7 @@ public class ConsoleRunner {
                     System.out.println(msg);
                     break;
                 case "2":
-                    //postView.show();
+                    postView.show();
                     System.out.println(msg);
                     break;
                 case "3":

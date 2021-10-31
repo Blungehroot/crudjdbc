@@ -44,21 +44,21 @@ public class LabelView {
         System.out.println(INPUT_NAME_MSG);
         String name = sc.next();
         System.out.println(EDIT_MSG);
-        labelController.update(Integer.valueOf(id), name);
+        labelController.update(Integer.parseInt(id), name);
     }
 
     void delete() {
         System.out.println(INPUT_ID_TO_DELETE);
         String id = sc.next();
         System.out.println(DELETE_MSG);
-        labelController.delete(Integer.valueOf(id));
+        labelController.delete(Integer.parseInt(id));
     }
 
     void printSelected() {
         System.out.println(INPUT_ID_MSG);
         String id = sc.next();
         System.out.println(DISPLAY_TARGET_MSG);
-        System.out.println(labelController.getById(Integer.valueOf(id)));
+        System.out.println(labelController.getById(Integer.parseInt(id)));
     }
 
     void printAll() {

@@ -1,17 +1,13 @@
-/*
 package com.crudjdbc.app.view;
 
 
 import com.crudjdbc.app.controller.PostController;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.Scanner;
 
 public class PostView {
     private final PostController postController;
     private final Scanner sc;
-    private final Gson gson;
 
     private final String menu = "Select action on posts:\n" +
             "1. Add new post\n" +
@@ -35,7 +31,6 @@ public class PostView {
     public PostView(PostController postController, Scanner sc) {
         this.postController = postController;
         this.sc = sc;
-        this.gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
     void create() {
@@ -59,26 +54,26 @@ public class PostView {
         System.out.println(INPUT_IDS_LABELS);
         String labelsIds = sc.next();
         System.out.println(EDIT_MSG);
-        postController.update(Long.valueOf(id), name, content, labelsIds);
+        postController.update(Integer.parseInt(id), name, content, labelsIds);
     }
 
     void delete() {
         System.out.println(INPUT_ID_TO_DELETE);
         String id = sc.next();
         System.out.println(DELETE_MSG);
-        postController.delete(Long.valueOf(id));
+        postController.delete(Integer.parseInt(id));
     }
 
     void printSelected() {
         System.out.println(INPUT_ID_MSG);
         String id = sc.next();
         System.out.println(DISPLAY_TARGET_MSG);
-        System.out.println(gson.toJson(postController.getById(Long.valueOf(id))));
+        System.out.println(postController.getById(Integer.parseInt(id)));
     }
 
     void printAll() {
         System.out.println(DISPLAY_ALL_MSG);
-        System.out.println(gson.toJson(postController.getAll()));
+        System.out.println(postController.getAll());
     }
 
     void show() {
@@ -119,4 +114,3 @@ public class PostView {
         }
     }
 }
-*/

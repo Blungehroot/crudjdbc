@@ -1,21 +1,28 @@
-/*
 package com.crudjdbc.app.controller;
 
 import com.crudjdbc.app.model.Label;
 import com.crudjdbc.app.model.Post;
-import com.crudjdbc.app.repository.gson.GsonLabelRepositoryImpl;
-import com.crudjdbc.app.repository.gson.GsonPostRepositoryImpl;
+import com.crudjdbc.app.service.LabelService;
+import com.crudjdbc.app.service.LabelServiceImpl;
+import com.crudjdbc.app.service.PostService;
+import com.crudjdbc.app.service.PostServiceImpl;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class PostController {
-    private final GsonPostRepositoryImpl gsonPostRepository;
-    private final GsonLabelRepositoryImpl gsonLabelRepository;
+    private final PostService postService;
+    private final LabelService labelService;
+
+    public PostController() {
+        postService = new PostServiceImpl();
+        labelService = new LabelServiceImpl();
+    }
+
 
     private List<Label> getListLabelsById(String ids) {
-        List<Label> allExistLabels = gsonLabelRepository.getAll();
+        List<Label> allExistLabels = labelService.getAll();
         List<Label> temp;
         String[] idsArray = ids.split(",");
         int size = idsArray.length;
@@ -34,17 +41,19 @@ public class PostController {
 
     }
 
-    public PostController() {
-        gsonPostRepository = new GsonPostRepositoryImpl();
-        gsonLabelRepository = new GsonLabelRepositoryImpl();
-    }
-
     public List<Post> getAll() {
-        return gsonPostRepository.getAll();
+        return postService.getAll();
     }
 
-    public Post getById(Long id) {
-        return gsonPostRepository.getById(id);
+    public Post getById(int id) {
+        if (postService.getById(id).getId() == null) {
+            try {
+                throw new Exception("Post with id = " + id + " is not present");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return postService.getById(id);
     }
 
     public Post create(String name, String content, String labelsIds) {
@@ -52,21 +61,27 @@ public class PostController {
         post.setName(name);
         post.setContent(content);
         post.setLabels(getListLabelsById(labelsIds));
-        return gsonPostRepository.save(post);
+        return postService.save(post);
     }
 
-    public Post update(Long id, String name, String content, String labelsIds) {
+    public Post update(int id, String name, String content, String labelsIds) {
         Post post = new Post();
         post.setId(id);
         post.setName(name);
         post.setContent(content);
         post.setLabels(null);
         post.setLabels(getListLabelsById(labelsIds));
-        return gsonPostRepository.update(post);
+        return postService.update(post);
     }
 
-    public void delete(Long id) {
-        gsonPostRepository.deleteById(id);
+    public void delete(int id) {
+        if (postService.getById(id).getId() == null) {
+            try {
+                throw new Exception("Post with id = " + id + " is not present and cannot be deleted");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        postService.deleteById(id);
     }
 }
-*/
