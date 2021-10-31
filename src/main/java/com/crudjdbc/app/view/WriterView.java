@@ -1,17 +1,13 @@
-/*
 package com.crudjdbc.app.view;
 
 
 import com.crudjdbc.app.controller.WriterController;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.Scanner;
 
 public class WriterView {
     private final WriterController writerController;
     private final Scanner sc;
-    private final Gson gson;
 
     private final String menu = "Select action on writers:\n" +
             "1. Add new writer\n" +
@@ -34,7 +30,6 @@ public class WriterView {
     public WriterView(WriterController writerController, Scanner sc) {
         this.writerController = writerController;
         this.sc = sc;
-        this.gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
     void create() {
@@ -54,26 +49,26 @@ public class WriterView {
         System.out.println(INPUT_IDS_POSTS);
         String postsIds = sc.next();
         System.out.println(EDIT_MSG);
-        writerController.update(Long.valueOf(id), name, postsIds);
+        writerController.update(Integer.parseInt(id), name, postsIds);
     }
 
     void delete() {
         System.out.println(INPUT_ID_TO_DELETE);
         String id = sc.next();
         System.out.println(DELETE_MSG);
-        writerController.delete(Long.valueOf(id));
+        writerController.delete(Integer.parseInt(id));
     }
 
     void printSelected() {
         System.out.println(INPUT_ID_MSG);
         String id = sc.next();
         System.out.println(DISPLAY_TARGET_MSG);
-        System.out.println(gson.toJson(writerController.getById(Long.valueOf(id))));
+        System.out.println(writerController.getById(Integer.parseInt(id)));
     }
 
     void printAll() {
         System.out.println(DISPLAY_ALL_MSG);
-        System.out.println(gson.toJson(writerController.getAll()));
+        System.out.println(writerController.getAll());
     }
 
     void show() {
@@ -114,4 +109,3 @@ public class WriterView {
         }
     }
 }
-*/

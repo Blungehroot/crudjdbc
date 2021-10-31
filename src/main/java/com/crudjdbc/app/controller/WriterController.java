@@ -1,21 +1,26 @@
-/*
 package com.crudjdbc.app.controller;
 
 import com.crudjdbc.app.model.Post;
 import com.crudjdbc.app.model.Writer;
-import com.crudjdbc.app.repository.gson.GsonPostRepositoryImpl;
-import com.crudjdbc.app.repository.gson.GsonWriterRepositoryImpl;
+import com.crudjdbc.app.service.*;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class WriterController {
-    private final GsonWriterRepositoryImpl gsonWriterRepository;
-    private final GsonPostRepositoryImpl gsonPostRepository;
+    private final WriterService writerService;
+    private final PostService postService;
+    private final LabelService labelService;
+
+    public WriterController() {
+        writerService = new WriterServiceImpl();
+        postService = new PostServiceImpl();
+        labelService = new LabelServiceImpl();
+    }
 
     private List<Post> getListPostsById(String ids) {
-        List<Post> allExistPosts = gsonPostRepository.getAll();
+        List<Post> allExistPosts = postService.getAll();
         List<Post> temp;
         String[] idsArray = ids.split(",");
         int size = idsArray.length;
@@ -33,37 +38,45 @@ public class WriterController {
         return temp;
     }
 
-    public WriterController() {
-        gsonWriterRepository = new GsonWriterRepositoryImpl();
-        gsonPostRepository = new GsonPostRepositoryImpl();
-    }
-
     public List<Writer> getAll() {
-        return gsonWriterRepository.getAll();
+        return writerService.getAll();
     }
 
-    public Writer getById(Long id) {
-        return gsonWriterRepository.getById(id);
+    public Writer getById(int id) {
+        if (writerService.getById(id).getId() == null) {
+            try {
+                throw new Exception("Writer with id = " + id + " is not present");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return writerService.getById(id);
     }
 
     public Writer create(String name, String postsIds) {
         Writer writer = new Writer();
         writer.setName(name);
         writer.setPosts(getListPostsById(postsIds));
-        return gsonWriterRepository.save(writer);
+        return writerService.save(writer);
     }
 
-    public Writer update(Long id, String name, String postsIds) {
+    public Writer update(int id, String name, String postsIds) {
         Writer writer = new Writer();
         writer.setId(id);
         writer.setName(name);
         writer.setPosts(null);
         writer.setPosts(getListPostsById(postsIds));
-        return gsonWriterRepository.update(writer);
+        return writerService.update(writer);
     }
 
-    public void delete(Long id) {
-        gsonWriterRepository.deleteById(id);
+    public void delete(int id) {
+        if (writerService.getById(id).getId() == null) {
+            try {
+                throw new Exception("Writer with id = " + id + " is not present and cannot be deleted");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        writerService.deleteById(id);
     }
 }
-*/
