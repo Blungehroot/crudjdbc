@@ -102,11 +102,11 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
                         label.setId(rs.getInt("l.ID"));
                         label.setName(rs.getString("l.NAME"));
                         labels.add(label);
-                        post.setLabels(labels);
                     }
-                    posts.add(post);
-                    writer.setPosts(posts.stream().distinct().collect(Collectors.toList()));
                 }
+                post.setLabels(labels.stream().distinct().collect(Collectors.toList()));
+                posts.add(post);
+                writer.setPosts(posts);
                 writers.add(writer);
                 posts = new ArrayList<>();
             }
@@ -167,7 +167,7 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
 
         //writer.setName("kik");
         //writer.setPosts(posts);
-       // wr.save(writer);
+        // wr.save(writer);
         System.out.println(wr.getAll());
     }
 }
