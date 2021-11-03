@@ -27,7 +27,7 @@
         <maven.jar.plugin>3.2.0</maven.jar.plugin>
         <jdbc.version>8.0.26</jdbc.version>
         <junit.version>5.5.2</junit.version>
-        <mockito.version>2.0.2-beta</mockito.version>
+        <mockito.core>4.0.0</mockito.core>
         <luquidbase.version>4.5.0</luquidbase.version>
     </properties>
 
@@ -53,10 +53,18 @@
 
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>${mockito.version}</version>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.core}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>4.0.0</version>
+            <scope>${mockito.core}</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>org.liquibase</groupId>
