@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+   http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="John (generated)" id="1439225004329-1">
+        <createTable tableName="labels">
+            <column autoIncrement="true" name="ID" type="INT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="NAME" type="VARCHAR(50)"/>
+            <column name="needCaptcha" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yevgeniy.shaidur (generated)" id="1636295627696-1">
+        <createTable tableName="labels">
+            <column autoIncrement="true" name="ID" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="NAME" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yevgeniy.shaidur (generated)" id="1636295627696-2">
+        <createTable tableName="labels_posts">
+            <column name="LABEL_ID" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="POST_ID" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yevgeniy.shaidur (generated)" id="1636295627696-3">
+        <createTable tableName="posts">
+            <column autoIncrement="true" name="ID" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="NAME" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CONTENT" type="VARCHAR(250)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="yevgeniy.shaidur (generated)" id="1636295627696-4">
+        <createTable tableName="posts_writers">
+            <column name="POST_ID" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="WRITER_ID" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yevgeniy.shaidur (generated)" id="1636295627696-5">
+        <createTable tableName="writers">
+            <column autoIncrement="true" name="ID" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="NAME" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="yevgeniy.shaidur (generated)" id="1636295627696-6">
+        <createIndex indexName="LABEL_ID" tableName="labels_posts">
+            <column name="LABEL_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="yevgeniy.shaidur (generated)" id="1636295627696-7">
+        <createIndex indexName="POST_ID" tableName="labels_posts">
+            <column name="POST_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="yevgeniy.shaidur (generated)" id="1636295627696-8">
+        <createIndex indexName="POST_ID" tableName="posts_writers">
+            <column name="POST_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="yevgeniy.shaidur (generated)" id="1636295627696-9">
+        <createIndex indexName="WRITER_ID" tableName="posts_writers">
+            <column name="WRITER_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="yevgeniy.shaidur (generated)" id="1636295627696-10">
+        <addForeignKeyConstraint baseColumnNames="LABEL_ID" baseTableName="labels_posts" constraintName="labels_posts_ibfk_1" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="labels" validate="true"/>
+    </changeSet>
+    <changeSet author="yevgeniy.shaidur (generated)" id="1636295627696-11">
+        <addForeignKeyConstraint baseColumnNames="POST_ID" baseTableName="labels_posts" constraintName="labels_posts_ibfk_2" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="posts" validate="true"/>
+    </changeSet>
+    <changeSet author="yevgeniy.shaidur (generated)" id="1636295627696-12">
+        <addForeignKeyConstraint baseColumnNames="WRITER_ID" baseTableName="posts_writers" constraintName="posts_writers_ibfk_2" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="ID" referencedTableName="writers" validate="true"/>
+    </changeSet>
+    <changeSet author="yevgeniy.shaidur (generated)" id="1636295627696-13">
+        <addForeignKeyConstraint baseColumnNames="POST_ID" baseTableName="posts_writers" constraintName="posts_writers_ibfk_3" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="CASCADE" referencedColumnNames="ID" referencedTableName="posts" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
