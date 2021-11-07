@@ -1,4 +1,4 @@
-package labelservicetests;
+package servicestests;
 
 import com.crudjdbc.app.model.Label;
 import com.crudjdbc.app.repository.jdbc.JdbcLabelRepositoryImpl;

@@ -1,11 +1,10 @@
-package labelservicetests;
+package servicestests;
 
 import com.crudjdbc.app.model.Label;
 import com.crudjdbc.app.model.Post;
 import com.crudjdbc.app.repository.jdbc.JdbcLabelRepositoryImpl;
 import com.crudjdbc.app.repository.jdbc.JdbcPostRepositoryImpl;
 import com.crudjdbc.app.service.PostServiceImpl;
-import liquibase.pro.packaged.P;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
