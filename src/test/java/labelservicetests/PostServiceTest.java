@@ -5,6 +5,7 @@ import com.crudjdbc.app.model.Post;
 import com.crudjdbc.app.repository.jdbc.JdbcLabelRepositoryImpl;
 import com.crudjdbc.app.repository.jdbc.JdbcPostRepositoryImpl;
 import com.crudjdbc.app.service.PostServiceImpl;
+import liquibase.pro.packaged.P;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -56,69 +57,101 @@ public class PostServiceTest {
     }
 
     @Test
-    void deleteLabel_shouldBeSuccess() {
-        Label label = new Label();
-        label.setId(1);
-        label.setName("Test label");
+    void deletePost_shouldBeSuccess() {
+        Post post = new Post();
 
-        doNothing().when(labelRepository).deleteById(label.getId());
+        post.setId(1);
+        post.setContent("Test content");
+        post.setName("Test post");
 
-        labelRepository.deleteById(label.getId());
+        doNothing().when(postRepository).deleteById(post.getId());
 
-        verify(labelRepository).deleteById(label.getId());
+        postRepository.deleteById(post.getId());
+
+        verify(postRepository).deleteById(post.getId());
     }
 
     @Test
     void updateLabel_shouldBeSuccess() {
-        Label labelExist = new Label();
-        Label labelUpdated = new Label();
+        Post postExist = new Post();
+        Post postUpdated = new Post();
+        Label label = new Label();
+        List<Label> labels = new ArrayList<>();
 
-        labelExist.setId(1);
-        labelExist.setName("Test label");
+        label.setId(1);
+        label.setName("Test label");
+        labels.add(label);
 
-        labelUpdated.setName("Updated");
-        labelUpdated.setId(1);
+        postExist.setId(1);
+        postExist.setName("Test Content");
+        postExist.setContent("Test post content");
+        postExist.setLabels(labels);
 
-        lenient().when(labelRepository.save(labelExist)).thenReturn(labelExist);
-        lenient().when(labelRepository.update(labelUpdated)).thenReturn(labelUpdated);
+        postUpdated.setId(1);
+        postUpdated.setName("Test post update");
+        postUpdated.setContent("Test post content update");
+        postUpdated.setLabels(labels);
 
-        Label result = labelRepository.update(labelUpdated);
+        lenient().when(postRepository.save(postExist)).thenReturn(postExist);
+        lenient().when(postRepository.update(postUpdated)).thenReturn(postUpdated);
+
+        Post result = postRepository.update(postUpdated);
 
         assertNotNull(result);
-        assertNotEquals(labelExist.getName(), result.getName());
+        assertNotEquals(postExist.getName(), result.getName());
 
-        verify(labelRepository).update(labelUpdated);
+        verify(postRepository).update(postUpdated);
     }
 
     @Test
-    void getLabelById_shouldBeSuccess() {
+    void getPostById_shouldBeSuccess() {
         Label label = new Label();
+        Post post = new Post();
+        List<Label> labels = new ArrayList<>();
+
         label.setId(1);
         label.setName("Test label");
 
-        when(labelRepository.getById(label.getId())).thenReturn(label);
+        labels.add(label);
 
-        Label result = labelRepository.getById(label.getId());
+        post.setId(1);
+        post.setContent("Test content");
+        post.setName("Test post");
+        post.setLabels(labels);
+
+        when(postRepository.getById(post.getId())).thenReturn(post);
+
+        Post result = postRepository.getById(post.getId());
 
         assertNotNull(result);
-        assertEquals(label, result);
+        assertEquals(post, result);
 
-        verify(labelRepository).getById(label.getId());
+        verify(postRepository).getById(post.getId());
     }
 
     @Test
     void getAll_shouldBeSuccess() {
         Label label = new Label();
+        Post post = new Post();
+        List<Label> labels = new ArrayList<>();
+        List<Post> posts = new ArrayList<>();
+
         label.setId(1);
         label.setName("Test label");
 
-        List<Label> labels = new ArrayList<>();
         labels.add(label);
 
-        when(labelRepository.getAll()).thenReturn(labels);
+        post.setId(1);
+        post.setContent("Test content");
+        post.setName("Test post");
+        post.setLabels(labels);
 
-        assertEquals(labels, labelRepository.getAll());
+        posts.add(post);
 
-        verify(labelRepository).getAll();
+        when(postRepository.getAll()).thenReturn(posts);
+
+        assertEquals(posts, postRepository.getAll());
+
+        verify(postRepository).getAll();
     }
 }
