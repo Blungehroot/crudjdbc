@@ -5,6 +5,8 @@ import com.crudjdbc.app.model.Label;
 import com.crudjdbc.app.model.Post;
 import com.crudjdbc.app.model.Writer;
 import com.crudjdbc.app.repository.WriterRepository;
+import liquibase.pro.packaged.P;
+import liquibase.pro.packaged.W;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +17,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class JdbcWriterRepositoryImpl implements WriterRepository {
+
+    private Label getLabel(ResultSet rs) throws SQLException {
+        List<Label> labels = new ArrayList<>();
+        Label label = new Label();
+        label.setId(rs.getInt("l.ID"));
+        label.setName(rs.getString("l.NAME"));
+        labels.add(label);
+        return label;
+    }
+
+    private Post getPost(ResultSet rs) throws SQLException {
+        Post post = new Post();
+        post.setId(rs.getInt("l.ID"));
+        post.setName(rs.getString("l.NAME"));
+
+        return post;
+    }
 
     private int getWriterId(Writer writer) {
         try {
@@ -185,5 +204,38 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
             e.printStackTrace();
         }
         System.out.println("Writer is deleted");
+    }
+
+    public static void main(String[] args) {
+        JdbcLabelRepositoryImpl jdbcLabelRepository = new JdbcLabelRepositoryImpl();
+        JdbcPostRepositoryImpl jdbcPostRepository = new JdbcPostRepositoryImpl();
+        JdbcWriterRepositoryImpl writerRepository = new JdbcWriterRepositoryImpl();
+        /*Label label = new Label();
+        Label label2 = new Label();
+        Post post = new Post();
+        label.setName("Kek");
+        jdbcLabelRepository.save(label);
+        List<Label> labels = new ArrayList<>();
+        List<Post> posts = new ArrayList<>();
+        labels.add(jdbcLabelRepository.getById(1));
+        labels.add(jdbcLabelRepository.getById(2));
+        labels.add(jdbcLabelRepository.getById(3));
+
+        post.setName("Keker");
+        post.setContent("Con");
+        post.setLabels(labels);
+        jdbcPostRepository.save(post);
+
+        posts.add(jdbcPostRepository.getById(4));
+        posts.add(jdbcPostRepository.getById(5));
+
+
+        Writer writer = new Writer();
+        writer.setName("Writer");
+        writer.setPosts(posts);
+        writerRepository.save(writer);*/
+
+        System.out.println(writerRepository.getById(4));
+
     }
 }

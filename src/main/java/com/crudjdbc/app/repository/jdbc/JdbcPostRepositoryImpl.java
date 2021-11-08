@@ -15,6 +15,13 @@ import java.util.stream.Collectors;
 
 public class JdbcPostRepositoryImpl implements PostRepository {
 
+    private Label getLabel(ResultSet rs) throws SQLException {
+        Label label = new Label();
+        label.setId(rs.getInt("l.ID"));
+        label.setName(rs.getString("l.NAME"));
+        return label;
+    }
+
     private int getPostId(Post post) {
         try {
             Connection conn = Connector.getConnection();
@@ -46,14 +53,11 @@ public class JdbcPostRepositoryImpl implements PostRepository {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Label label = new Label();
                 post.setId(rs.getInt("p.ID"));
                 post.setName(rs.getString("p.NAME"));
                 post.setContent(rs.getString("CONTENT"));
                 if (rs.getInt("l.ID") > 0) {
-                    label.setId(rs.getInt("l.ID"));
-                    label.setName(rs.getString("l.NAME"));
-                    labels.add(label);
+                    labels.add(getLabel(rs));
                     post.setLabels(labels);
                 }
             }
@@ -75,14 +79,11 @@ public class JdbcPostRepositoryImpl implements PostRepository {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Post post = new Post();
-                Label label = new Label();
                 post.setId(rs.getInt("p.ID"));
                 post.setName(rs.getString("p.NAME"));
                 post.setContent(rs.getString("CONTENT"));
                 if (rs.getInt("l.ID") > 0) {
-                    label.setId(rs.getInt("l.ID"));
-                    label.setName(rs.getString("l.NAME"));
-                    labels.add(label);
+                    labels.add(getLabel(rs));
                     post.setLabels(labels);
                 }
                 posts.add(post);
@@ -166,5 +167,27 @@ public class JdbcPostRepositoryImpl implements PostRepository {
             e.printStackTrace();
         }
         System.out.println("Post is deleted");
+    }
+
+    public static void main(String[] args) {
+        JdbcLabelRepositoryImpl jdbcLabelRepository = new JdbcLabelRepositoryImpl();
+        JdbcPostRepositoryImpl jdbcPostRepository = new JdbcPostRepositoryImpl();
+        /*Label label = new Label();
+        Label label2 = new Label();
+        Post post = new Post();
+        label.setName("Kek");
+        jdbcLabelRepository.save(label);
+        List<Label> labels = new ArrayList<>();
+        labels.add(jdbcLabelRepository.getById(1));
+        labels.add(jdbcLabelRepository.getById(2));
+        labels.add(jdbcLabelRepository.getById(3));
+
+        post.setName("Keker");
+        post.setContent("Con");
+        post.setLabels(labels);
+        jdbcPostRepository.save(post);*/
+
+        System.out.println(jdbcPostRepository.getAll());
+
     }
 }
