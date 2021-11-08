@@ -3,9 +3,9 @@ package com.crudjdbc.app.controller;
 import com.crudjdbc.app.model.Label;
 import com.crudjdbc.app.model.Post;
 import com.crudjdbc.app.service.LabelService;
-import com.crudjdbc.app.service.LabelServiceImpl;
+import com.crudjdbc.app.service.serviceimpl.LabelServiceImpl;
 import com.crudjdbc.app.service.PostService;
-import com.crudjdbc.app.service.PostServiceImpl;
+import com.crudjdbc.app.service.serviceimpl.PostServiceImpl;
 
 import java.util.Arrays;
 import java.util.List;

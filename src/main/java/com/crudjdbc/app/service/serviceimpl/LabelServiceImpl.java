@@ -1,8 +1,9 @@
-package com.crudjdbc.app.service;
+package com.crudjdbc.app.service.serviceimpl;
 
 import com.crudjdbc.app.model.Label;
 import com.crudjdbc.app.repository.LabelRepository;
 import com.crudjdbc.app.repository.jdbc.JdbcLabelRepositoryImpl;
+import com.crudjdbc.app.service.LabelService;
 
 import java.util.List;
 

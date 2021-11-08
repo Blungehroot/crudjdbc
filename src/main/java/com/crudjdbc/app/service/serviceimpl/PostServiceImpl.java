@@ -1,8 +1,9 @@
-package com.crudjdbc.app.service;
+package com.crudjdbc.app.service.serviceimpl;
 
 import com.crudjdbc.app.model.Post;
 import com.crudjdbc.app.repository.PostRepository;
 import com.crudjdbc.app.repository.jdbc.JdbcPostRepositoryImpl;
+import com.crudjdbc.app.service.PostService;
 
 import java.util.List;
 

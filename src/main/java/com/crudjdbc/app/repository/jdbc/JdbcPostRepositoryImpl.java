@@ -17,7 +17,7 @@ public class JdbcPostRepositoryImpl implements PostRepository {
 
     private int getPostId(Post post) {
         try {
-            Connection conn = Connector.getInstance().getConnection();
+            Connection conn = Connector.getConnection();
             PreparedStatement ps = conn.prepareStatement("select * from posts where NAME=(?);");
             ps.setString(1, post.getName());
             ResultSet rs = ps.executeQuery();
@@ -37,7 +37,7 @@ public class JdbcPostRepositoryImpl implements PostRepository {
         Post post = new Post();
         List<Label> labels = new ArrayList<>();
         try {
-            Connection conn = Connector.getInstance().getConnection();
+            Connection conn = Connector.getConnection();
             PreparedStatement ps =
                     conn.prepareStatement("select p.ID, p.NAME, p.CONTENT, l.ID, l.NAME from posts p\n" +
                             "LEFT OUTER JOIN labels_posts lp on p.ID = lp.POST_ID\n" +
@@ -57,7 +57,6 @@ public class JdbcPostRepositoryImpl implements PostRepository {
                     post.setLabels(labels);
                 }
             }
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -69,7 +68,7 @@ public class JdbcPostRepositoryImpl implements PostRepository {
         List<Post> posts = new ArrayList<>();
         List<Label> labels = new ArrayList<>();
         try {
-            Connection conn = Connector.getInstance().getConnection();
+            Connection conn = Connector.getConnection();
             PreparedStatement ps = conn.prepareStatement("select p.ID, p.NAME, p.CONTENT, l.ID, l.NAME from posts p\n" +
                     "LEFT OUTER JOIN labels_posts lp on p.ID = lp.POST_ID\n" +
                     "LEFT OUTER JOIN labels l on lp.LABEL_ID = l.ID");
@@ -89,7 +88,6 @@ public class JdbcPostRepositoryImpl implements PostRepository {
                 posts.add(post);
                 labels = new ArrayList<>();
             }
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -99,7 +97,7 @@ public class JdbcPostRepositoryImpl implements PostRepository {
     @Override
     public Post save(Post post) {
         try {
-            Connection conn = Connector.getInstance().getConnection();
+            Connection conn = Connector.getConnection();
             PreparedStatement ps = conn.prepareStatement("insert into posts(NAME, CONTENT) values (?, ?)");
             ps.setString(1, post.getName());
             ps.setString(2, post.getContent());
@@ -116,7 +114,6 @@ public class JdbcPostRepositoryImpl implements PostRepository {
             }
             ps.executeBatch();
             conn.commit();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -126,7 +123,7 @@ public class JdbcPostRepositoryImpl implements PostRepository {
     @Override
     public Post update(Post post) {
         try {
-            Connection conn = Connector.getInstance().getConnection();
+            Connection conn = Connector.getConnection();
             PreparedStatement ps = conn.prepareStatement("update posts\n" +
                     "inner join labels_posts on labels_posts.POST_ID = posts.ID\n" +
                     "SET posts.NAME = (?), posts.CONTENT = (?)\n" +
@@ -152,7 +149,6 @@ public class JdbcPostRepositoryImpl implements PostRepository {
             }
             ps.executeBatch();
             conn.commit();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -162,11 +158,10 @@ public class JdbcPostRepositoryImpl implements PostRepository {
     @Override
     public void deleteById(Integer id) {
         try {
-            Connection conn = Connector.getInstance().getConnection();
+            Connection conn = Connector.getConnection();
             PreparedStatement ps = conn.prepareStatement("delete from posts where ID=(?);");
             ps.setInt(1, id);
             ps.executeUpdate();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

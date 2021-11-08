@@ -2,7 +2,7 @@ package servicestests;
 
 import com.crudjdbc.app.model.Label;
 import com.crudjdbc.app.repository.jdbc.JdbcLabelRepositoryImpl;
-import com.crudjdbc.app.service.LabelServiceImpl;
+import com.crudjdbc.app.service.serviceimpl.LabelServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;

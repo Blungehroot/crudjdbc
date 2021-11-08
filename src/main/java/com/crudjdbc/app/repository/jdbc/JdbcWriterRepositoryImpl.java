@@ -18,7 +18,7 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
 
     private int getWriterId(Writer writer) {
         try {
-            Connection conn = Connector.getInstance().getConnection();
+            Connection conn = Connector.getConnection();
             PreparedStatement ps = conn.prepareStatement("select * from writers where NAME=(?);");
             ps.setString(1, writer.getName());
             ResultSet rs = ps.executeQuery();
@@ -38,7 +38,7 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
         List<Post> posts = new ArrayList<>();
         List<Label> labels = new ArrayList<>();
         try {
-            Connection conn = Connector.getInstance().getConnection();
+            Connection conn = Connector.getConnection();
             PreparedStatement ps =
                     conn.prepareStatement("select w.ID, w.NAME, p.ID, p.NAME, p.CONTENT, l.ID, l.NAME from writers w\n" +
                             "LEFT OUTER JOIN posts_writers pw on w.ID = pw.WRITER_ID\n" +
@@ -67,7 +67,6 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
                     writer.setPosts(posts.stream().distinct().collect(Collectors.toList()));
                 }
             }
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -80,7 +79,7 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
         List<Post> posts = new ArrayList<>();
         List<Label> labels = new ArrayList<>();
         try {
-            Connection conn = Connector.getInstance().getConnection();
+            Connection conn = Connector.getConnection();
             PreparedStatement ps =
                     conn.prepareStatement("select w.ID, w.NAME, p.ID, p.NAME, p.CONTENT, l.ID, l.NAME from writers w\n" +
                             "LEFT OUTER JOIN posts_writers pw on w.ID = pw.WRITER_ID\n" +
@@ -110,7 +109,6 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
                 writers.add(writer);
                 posts = new ArrayList<>();
             }
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -120,7 +118,7 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
     @Override
     public Writer save(Writer writer) {
         try {
-            Connection conn = Connector.getInstance().getConnection();
+            Connection conn = Connector.getConnection();
             PreparedStatement ps = conn.prepareStatement("insert into writers(NAME) values (?)");
             ps.setString(1, writer.getName());
             ps.executeUpdate();
@@ -136,7 +134,6 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
             }
             ps.executeBatch();
             conn.commit();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -147,7 +144,7 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
     @Override
     public Writer update(Writer writer) {
         try {
-            Connection conn = Connector.getInstance().getConnection();
+            Connection conn = Connector.getConnection();
             PreparedStatement ps = conn.prepareStatement("update writers inner join posts_writers on posts_writers.WRITER_ID = writers.ID\n" +
                     "SET writers.NAME = (?)\n" +
                     "WHERE writers.ID = (?);");
@@ -171,7 +168,6 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
             }
             ps.executeBatch();
             conn.commit();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -181,11 +177,10 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
     @Override
     public void deleteById(Integer id) {
         try {
-            Connection conn = Connector.getInstance().getConnection();
+            Connection conn = Connector.getConnection();
             PreparedStatement ps = conn.prepareStatement("delete from writers where ID=(?);");
             ps.setInt(1, id);
             ps.executeUpdate();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

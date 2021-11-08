@@ -7,17 +7,6 @@
    http://www.liquibase.org/xml/ns/dbchangelog
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet author="John (generated)" id="1439225004329-1">
-        <createTable tableName="labels">
-            <column autoIncrement="true" name="ID" type="INT">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="NAME" type="VARCHAR(50)"/>
-            <column name="needCaptcha" type="BIT(1)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
     <changeSet author="yevgeniy.shaidur (generated)" id="1636295627696-1">
         <createTable tableName="labels">
             <column autoIncrement="true" name="ID" type="INT">

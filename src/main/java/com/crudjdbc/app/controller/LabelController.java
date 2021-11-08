@@ -2,7 +2,7 @@ package com.crudjdbc.app.controller;
 
 import com.crudjdbc.app.model.Label;
 import com.crudjdbc.app.service.LabelService;
-import com.crudjdbc.app.service.LabelServiceImpl;
+import com.crudjdbc.app.service.serviceimpl.LabelServiceImpl;
 
 import java.util.List;
 

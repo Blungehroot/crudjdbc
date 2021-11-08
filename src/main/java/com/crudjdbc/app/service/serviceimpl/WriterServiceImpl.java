@@ -1,8 +1,9 @@
-package com.crudjdbc.app.service;
+package com.crudjdbc.app.service.serviceimpl;
 
 import com.crudjdbc.app.model.Writer;
 import com.crudjdbc.app.repository.WriterRepository;
 import com.crudjdbc.app.repository.jdbc.JdbcWriterRepositoryImpl;
+import com.crudjdbc.app.service.WriterService;
 
 import java.util.List;
 

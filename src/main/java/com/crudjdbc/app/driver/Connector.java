@@ -9,7 +9,7 @@ import java.util.Properties;
 public class Connector {
     private static final Properties prop = new Properties();
     private static Connector instance;
-    private Connection connection;
+    private static Connection connection;
 
     private Connector() {
         try {
@@ -22,17 +22,11 @@ public class Connector {
         }
     }
 
-    public Connection getConnection() {
-        return connection;
-    }
-
-    public static Connector getInstance() throws SQLException{
+    public static Connection getConnection() {
         if (instance == null) {
             instance = new Connector();
-        } else if (instance.getConnection().isClosed()) {
-            instance = new Connector();
         }
-        return instance;
+        return connection;
     }
 }
 
