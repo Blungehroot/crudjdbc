@@ -55,7 +55,7 @@ public class JdbcPostRepositoryImpl implements PostRepository {
             while (rs.next()) {
                 post.setId(rs.getInt("p.ID"));
                 post.setName(rs.getString("p.NAME"));
-                post.setContent(rs.getString("CONTENT"));
+                post.setContent(rs.getString("p.CONTENT"));
                 if (rs.getInt("l.ID") > 0) {
                     labels.add(getLabel(rs));
                     post.setLabels(labels);
@@ -70,7 +70,6 @@ public class JdbcPostRepositoryImpl implements PostRepository {
     @Override
     public List<Post> getAll() {
         List<Post> posts = new ArrayList<>();
-        List<Label> labels = new ArrayList<>();
         try {
             Connection conn = Connector.getConnection();
             PreparedStatement ps = conn.prepareStatement("select p.ID, p.NAME, p.CONTENT, l.ID, l.NAME from posts p\n" +
@@ -82,12 +81,9 @@ public class JdbcPostRepositoryImpl implements PostRepository {
                 post.setId(rs.getInt("p.ID"));
                 post.setName(rs.getString("p.NAME"));
                 post.setContent(rs.getString("CONTENT"));
-                if (rs.getInt("l.ID") > 0) {
-                    labels.add(getLabel(rs));
-                    post.setLabels(labels);
-                }
+                post.setLabels(getById(rs.getInt("p.ID")).getLabels());
+
                 posts.add(post);
-                labels = new ArrayList<>();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -167,27 +163,5 @@ public class JdbcPostRepositoryImpl implements PostRepository {
             e.printStackTrace();
         }
         System.out.println("Post is deleted");
-    }
-
-    public static void main(String[] args) {
-        JdbcLabelRepositoryImpl jdbcLabelRepository = new JdbcLabelRepositoryImpl();
-        JdbcPostRepositoryImpl jdbcPostRepository = new JdbcPostRepositoryImpl();
-        /*Label label = new Label();
-        Label label2 = new Label();
-        Post post = new Post();
-        label.setName("Kek");
-        jdbcLabelRepository.save(label);
-        List<Label> labels = new ArrayList<>();
-        labels.add(jdbcLabelRepository.getById(1));
-        labels.add(jdbcLabelRepository.getById(2));
-        labels.add(jdbcLabelRepository.getById(3));
-
-        post.setName("Keker");
-        post.setContent("Con");
-        post.setLabels(labels);
-        jdbcPostRepository.save(post);*/
-
-        System.out.println(jdbcPostRepository.getAll());
-
     }
 }

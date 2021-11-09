@@ -5,8 +5,6 @@ import com.crudjdbc.app.model.Label;
 import com.crudjdbc.app.model.Post;
 import com.crudjdbc.app.model.Writer;
 import com.crudjdbc.app.repository.WriterRepository;
-import liquibase.pro.packaged.P;
-import liquibase.pro.packaged.W;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,20 +15,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class JdbcWriterRepositoryImpl implements WriterRepository {
-
-    private Label getLabel(ResultSet rs) throws SQLException {
-        List<Label> labels = new ArrayList<>();
-        Label label = new Label();
-        label.setId(rs.getInt("l.ID"));
-        label.setName(rs.getString("l.NAME"));
-        labels.add(label);
-        return label;
-    }
+    JdbcPostRepositoryImpl jdbcPostRepository = new JdbcPostRepositoryImpl();
 
     private Post getPost(ResultSet rs) throws SQLException {
         Post post = new Post();
-        post.setId(rs.getInt("l.ID"));
-        post.setName(rs.getString("l.NAME"));
+        post.setId(rs.getInt("p.ID"));
+        post.setName(rs.getString("p.NAME"));
+        post.setContent(rs.getString("p.CONTENT"));
 
         return post;
     }
@@ -55,7 +46,6 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
     public Writer getById(Integer id) {
         Writer writer = new Writer();
         List<Post> posts = new ArrayList<>();
-        List<Label> labels = new ArrayList<>();
         try {
             Connection conn = Connector.getConnection();
             PreparedStatement ps =
@@ -68,20 +58,11 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Post post = new Post();
-                Label label = new Label();
                 writer.setId(rs.getInt("w.ID"));
                 writer.setName(rs.getString("w.NAME"));
                 if (rs.getInt("p.ID") > 0) {
-                    post.setId(rs.getInt("p.ID"));
-                    post.setName(rs.getString("p.NAME"));
-                    post.setContent(rs.getString("p.CONTENT"));
-                    if (rs.getInt("l.ID") > 0) {
-                        label.setId(rs.getInt("l.ID"));
-                        label.setName(rs.getString("l.NAME"));
-                        labels.add(label);
-                        post.setLabels(labels);
-                    }
+                    Post post = getPost(rs);
+                    post.setLabels(jdbcPostRepository.getById(post.getId()).getLabels());
                     posts.add(post);
                     writer.setPosts(posts.stream().distinct().collect(Collectors.toList()));
                 }
@@ -95,8 +76,6 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
     @Override
     public List<Writer> getAll() {
         List<Writer> writers = new ArrayList<>();
-        List<Post> posts = new ArrayList<>();
-        List<Label> labels = new ArrayList<>();
         try {
             Connection conn = Connector.getConnection();
             PreparedStatement ps =
@@ -107,26 +86,7 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
                             "LEFT OUTER JOIN labels l on lp.LABEL_ID = l.ID;");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Writer writer = new Writer();
-                Post post = new Post();
-                Label label = new Label();
-                writer.setId(rs.getInt("w.ID"));
-                writer.setName(rs.getString("w.NAME"));
-                if (rs.getInt("p.ID") > 0) {
-                    post.setId(rs.getInt("p.ID"));
-                    post.setName(rs.getString("p.NAME"));
-                    post.setContent(rs.getString("p.CONTENT"));
-                    if (rs.getInt("l.ID") > 0) {
-                        label.setId(rs.getInt("l.ID"));
-                        label.setName(rs.getString("l.NAME"));
-                        labels.add(label);
-                    }
-                }
-                post.setLabels(labels.stream().distinct().collect(Collectors.toList()));
-                posts.add(post);
-                writer.setPosts(posts);
-                writers.add(writer);
-                posts = new ArrayList<>();
+                writers.add(getById(rs.getInt("w.ID")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -204,38 +164,5 @@ public class JdbcWriterRepositoryImpl implements WriterRepository {
             e.printStackTrace();
         }
         System.out.println("Writer is deleted");
-    }
-
-    public static void main(String[] args) {
-        JdbcLabelRepositoryImpl jdbcLabelRepository = new JdbcLabelRepositoryImpl();
-        JdbcPostRepositoryImpl jdbcPostRepository = new JdbcPostRepositoryImpl();
-        JdbcWriterRepositoryImpl writerRepository = new JdbcWriterRepositoryImpl();
-        /*Label label = new Label();
-        Label label2 = new Label();
-        Post post = new Post();
-        label.setName("Kek");
-        jdbcLabelRepository.save(label);
-        List<Label> labels = new ArrayList<>();
-        List<Post> posts = new ArrayList<>();
-        labels.add(jdbcLabelRepository.getById(1));
-        labels.add(jdbcLabelRepository.getById(2));
-        labels.add(jdbcLabelRepository.getById(3));
-
-        post.setName("Keker");
-        post.setContent("Con");
-        post.setLabels(labels);
-        jdbcPostRepository.save(post);
-
-        posts.add(jdbcPostRepository.getById(4));
-        posts.add(jdbcPostRepository.getById(5));
-
-
-        Writer writer = new Writer();
-        writer.setName("Writer");
-        writer.setPosts(posts);
-        writerRepository.save(writer);*/
-
-        System.out.println(writerRepository.getById(4));
-
     }
 }
